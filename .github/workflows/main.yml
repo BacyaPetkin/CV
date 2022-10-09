@@ -17,7 +17,7 @@ jobs:
       - name: Build CV
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: resume.tex
+          root_file: RomanDugaev_CV.tex
           working_directory: cv_eng
           latexmk_use_xelatex: true
           
@@ -25,5 +25,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: RomanDugaev_CV
-          path: cv_eng.pdf
+          path: RomanDugaev_CV.pdf
 
+      - name: Release
+        uses: softprops/action-gh-release@v1
