@@ -17,7 +17,8 @@ jobs:
       - name: Build CV
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: cv_eng/resume.tex
+          root_file: resume.tex
+          working_directory: cv_eng
           latexmk_use_xelatex: true
           
       - name: Upload PDF file
