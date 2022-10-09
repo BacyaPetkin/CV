@@ -242,6 +242,8 @@
 % Defines writer's mobile (optional)
 % Usage: \mobile{<mobile number>}
 \newcommand*{\mobile}[1]{\def\@mobile{#1}}
+\newcommand*{\mobileprimary}[1]{\def\@mobileprimary{#1}}
+\newcommand*{\mobilesecondary}[1]{\def\@mobilesecondary{#1}}
 
 % Defines writer's email (optional)
 % Usage: \email{<email address>}
@@ -451,6 +453,18 @@
           \href{tel:\@mobile}{\faMobile\acvHeaderIconSep\@mobile}%
           \setbool{isstart}{false}%
         }%
+      \ifthenelse{\isundefined{\@mobileprimary}}%
+      {}%
+      {%
+        \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+        \href{tel:\@mobileprimary}{\faMobile\acvHeaderIconSep\@mobileprimary}%
+      }%
+      \ifthenelse{\isundefined{\@mobilesecondary}}%
+      {}%
+      {%
+        \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+        \href{tel:\@mobilesecondary}{\faMobile\acvHeaderIconSep\@mobilesecondary}%
+      }%
       \ifthenelse{\isundefined{\@email}}%
         {}%
         {%
