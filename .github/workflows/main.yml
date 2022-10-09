@@ -32,7 +32,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          overwrite: true
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           tag_name: 1.0.0
 
       - name: Upload CV
