@@ -20,12 +20,6 @@ jobs:
           root_file: RomanDugaev_CV.tex
           working_directory: cv_eng
           latexmk_use_xelatex: true
-          
-      - name: Upload PDF file
-        uses: actions/upload-artifact@v3
-        with:
-          name: RomanDugaev_CV
-          path: cv_eng/RomanDugaev_CV.pdf
 
       - name: Release
         uses: actions/create-release@v1
@@ -46,12 +40,3 @@ jobs:
           asset_name: RomanDugaev_CV
           asset_content_type: application/pdf
           
-      - name: Upload CV artifact
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: RomanDugaev_CV.zip
-          asset_name: RomanDugaev_CV
-          asset_content_type: application/zip
