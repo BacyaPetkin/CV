@@ -37,14 +37,20 @@ jobs:
 
       - name: Upload CV
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: cv_eng/RomanDugaev_CV.pdf
           asset_name: RomanDugaev_CV
           asset_content_type: application/pdf
           
       - name: Upload CV artifact
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: RomanDugaev_CV.zip
           asset_name: RomanDugaev_CV
           asset_content_type: application/zip
