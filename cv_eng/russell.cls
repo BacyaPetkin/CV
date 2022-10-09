@@ -261,6 +261,8 @@
 % Usage: \github{<github-nick>}
 \newcommand*{\github}[1]{\def\@github{#1}}
 
+\newcommand*{\telegram}[1]{\def\@telegram{#1}}
+
 % Defines writer's gitlab (optional)
 % Usage: \gitlab{<gitlab-nick>}
 \newcommand*{\gitlab}[1]{\def\@gitlab{#1}}
@@ -490,6 +492,12 @@
           \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
           \href{https://\@github}{\faGithubSquare\acvHeaderIconSep\@github}%
         }%
+      \ifthenelse{\isundefined{\@telegram}}%
+      {}%
+      {%
+        \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+        \href{https://\@telegram}{\faTelegram\acvHeaderIconSep\@telegram}%
+      }%
       \ifthenelse{\isundefined{\@gitlab}}%
         {}%
         {%
