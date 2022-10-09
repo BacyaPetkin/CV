@@ -263,6 +263,8 @@
 
 \newcommand*{\telegram}[1]{\def\@telegram{#1}}
 
+\newcommand*{\whatsapp}[1]{\def\@whatsapp{#1}}
+
 % Defines writer's gitlab (optional)
 % Usage: \gitlab{<gitlab-nick>}
 \newcommand*{\gitlab}[1]{\def\@gitlab{#1}}
@@ -467,6 +469,18 @@
         \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
         \href{tel:\@mobilesecondary}{\faMobile\acvHeaderIconSep\@mobilesecondary}%
       }%
+      \ifthenelse{\isundefined{\@telegram}}%
+      {}%
+      {%
+        \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+        \href{https://\@telegram}{\faTelegram\acvHeaderIconSep\@telegram}%
+      }%
+      \ifthenelse{\isundefined{\@whatsapp}}%
+      {}%
+      {%
+        \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+        \href{https://\@whatsapp}{\faWhatsappSquare\acvHeaderIconSep\@whatsapp}%
+      }%
       \ifthenelse{\isundefined{\@email}}%
         {}%
         {%
@@ -492,12 +506,6 @@
           \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
           \href{https://\@github}{\faGithubSquare\acvHeaderIconSep\@github}%
         }%
-      \ifthenelse{\isundefined{\@telegram}}%
-      {}%
-      {%
-        \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-        \href{https://\@telegram}{\faTelegram\acvHeaderIconSep\@telegram}%
-      }%
       \ifthenelse{\isundefined{\@gitlab}}%
         {}%
         {%
