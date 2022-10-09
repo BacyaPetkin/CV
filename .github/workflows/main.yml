@@ -17,7 +17,7 @@ jobs:
       - name: Build CV
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: RomanDugaev_CV.tex
+          root_file: resume.tex
           working_directory: cv_eng
           latexmk_use_xelatex: true
 
@@ -27,7 +27,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          draft: true
           tag_name: 1.0.0
 
       - name: Upload CV
@@ -36,7 +35,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: cv_eng/RomanDugaev_CV.pdf
-          asset_name: RomanDugaev_CV
+          asset_path: cv_eng/resume.pdf
+          asset_name: RomanDugaev_CV.pdf
           asset_content_type: application/pdf
           
