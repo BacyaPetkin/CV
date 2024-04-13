@@ -1,0 +1,100 @@
+#!/bin/bash
+
+set -e
+
+SCRIPT_DIR=$(realpath "$(dirname "$0")")
+DESCRIPTION="Build CV"
+
+LATEX=xelatex
+
+CV_LATEX_FILENAME=resume.tex
+CV_PATH_ENG=$SCRIPT_DIR/cv_eng
+CV_PATH_RUS=$SCRIPT_DIR/cv_rus
+
+BUILD_DIR=$SCRIPT_DIR/build
+
+BUILD_MODE= # eng or rus
+
+load-colors() {
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[0;33m'
+    BLUE='\033[0;34m'
+    NC='\033[0m'
+}
+
+print-error() { load-colors && echo -e "${RED}Error: $@$NC" >&2; }
+print-info() { load-colors && echo -e "${GREEN}Info: $@$NC" >&2; }
+print-warning() { load-colors && echo -e "${YELLOW}Warning: $@$NC" >&2; }
+print-debug() { load-colors && echo -e "${BLUE}Debug: $@$NC" >&2; }
+
+execute() {
+    print-debug Running: "$@"
+    eval "$@"
+    result=$?
+
+    if [ $result -ne 0 ]; then
+        print-error Exited with error: $result
+        return $result
+    fi
+}
+
+build-latex-file() {
+    if [ "$#" -ne 1 ]; then
+        print-error Incorrect number of arguments for build-latex-file function
+        exit 5
+    fi
+    source_path=$(realpath $1)
+    subbuild_dir=$(execute basename $(dirname $source_path))
+    output_path=$BUILD_DIR/$subbuild_dir
+
+    echo source_path $source_path
+    echo output_path $output_path
+    echo subbuild_dir $subbuild_dir
+
+    execute mkdir --parent $output_path
+    execute xelatex -interaction=nonstopmode -output-directory=$output_path $source_path
+}
+
+build-cv() {
+    if [ "$BUILD_MODE" == "eng" ]; then
+        print-info Building CV in english
+        (execute cd $CV_PATH_ENG && build-latex-file $CV_LATEX_FILENAME)
+    elif [ "$BUILD_MODE" == "rus" ]; then
+        print-info Building CV in russian
+        (execute cd $CV_PATH_RUS && build-latex-file $CV_LATEX_FILENAME)
+    else
+        print-error Invalid CV mode: '$BUILD_MODE'
+        exit 4
+    fi
+}
+
+print-usage() {
+    echo "Usage: $0 --language [eng|rus]"
+    echo "Description: $DESCRIPTION"
+}
+
+parse-cli-options() {
+    if [ "$#" -ne 2 ]; then
+        print-error Incorrect number of arguments.
+        print-usage
+        exit 1
+    fi
+
+    if [ "$1" != "--language" ]; then
+        print-error Unknown option $1
+        print-usage
+        exit 2
+    fi
+
+    if [ "$2" != "eng" ] && [ "$2" != "rus" ]; then
+        print-error Invalid value for --git-access-mode. Choose either 'eng' or 'rus'.
+        print-usage
+        exit 3
+    fi
+
+    BUILD_MODE=$2
+}
+
+parse-cli-options $@
+build-cv

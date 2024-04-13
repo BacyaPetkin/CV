@@ -14,11 +14,18 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Build CV
+      - name: Build CV (eng)
         uses: xu-cheng/latex-action@v2
         with:
           root_file: resume.tex
           working_directory: cv_eng
+          latexmk_use_xelatex: true
+
+      - name: Build CV (rus)
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: resume.tex
+          working_directory: cv_rus
           latexmk_use_xelatex: true
 
       - name: Release
@@ -30,19 +37,35 @@ jobs:
           draft: true
           tag_name: 1.0.0
           
-      - name: Upload artifacts
+      - name: Upload artifacts (eng)
         uses: actions/upload-artifact@v3
         with:
           name: RomanDugaev_CV
           path: cv_eng/resume.pdf
 
-      - name: Upload CV
+      - name: Upload artifacts (rus)
+        uses: actions/upload-artifact@v3
+        with:
+          name: RomanDugaev_CV
+          path: cv_rus/resume.pdf
+
+      - name: Upload CV (eng)
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: cv_eng/resume.pdf
-          asset_name: RomanDugaev_CV.pdf
+          asset_name: RomanDugaev_CV(eng).pdf
+          asset_content_type: application/pdf
+
+      - name: Upload CV (rus)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: cv_rus/resume.pdf
+          asset_name: RomanDugaev_CV(rus).pdf
           asset_content_type: application/pdf
           
