@@ -14,9 +14,13 @@ On Debian/Ubuntu:
 ```sh
 sudo apt-get update
 sudo apt-get install --no-install-recommends \
-  texlive-xetex texlive-latex-extra texlive-lang-cyrillic fonts-noto-core
+  texlive-xetex texlive-latex-extra texlive-fonts-recommended \
+  texlive-lang-cyrillic fonts-noto-core
 ./compile
 ```
+
+`texlive-fonts-recommended` supplies `pzdr.tfm`, required by XeLaTeX hyperlinks.
+It must be installed explicitly when using `--no-install-recommends`.
 
 On other systems, install XeLaTeX, the packages used in `cv.sty`, Russian language
 support and Noto Sans. No Python, containers or separate CV generator is required.

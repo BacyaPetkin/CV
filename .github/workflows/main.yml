@@ -24,7 +24,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            texlive-xetex texlive-latex-extra texlive-lang-cyrillic fonts-noto-core
+            texlive-xetex texlive-latex-extra texlive-fonts-recommended \
+            texlive-lang-cyrillic fonts-noto-core
 
       - name: Build both CVs
         run: ./compile
