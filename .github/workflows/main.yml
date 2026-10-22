@@ -1,71 +1,61 @@
-name: CI
+name: Build CV
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
   workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Build CV (eng)
-        uses: xu-cheng/latex-action@v2
+      - uses: actions/checkout@v7
         with:
-          root_file: resume.tex
-          working_directory: cv_eng
-          latexmk_use_xelatex: true
+          persist-credentials: false
 
-      - name: Build CV (rus)
-        uses: xu-cheng/latex-action@v2
+      - name: Install LaTeX and fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-xetex texlive-latex-extra texlive-lang-cyrillic fonts-noto-core
+
+      - name: Build both CVs
+        run: ./compile
+
+      - name: Upload PDFs
+        uses: actions/upload-artifact@v7
         with:
-          root_file: resume.tex
-          working_directory: cv_rus
-          latexmk_use_xelatex: true
+          name: cv-pdfs
+          path: |
+            build/RomanDugaev_CV_eng.pdf
+            build/RomanDugaev_CV_rus.pdf
+          if-no-files-found: error
 
-      - name: Release
-        uses: actions/create-release@v1
-        id: create_release
+  publish:
+    if: github.event_name == 'release'
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: cv-pdfs
+          path: build
+
+      - name: Attach PDFs to the published release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          draft: true
-          tag_name: 1.0.0
-          
-      - name: Upload artifacts (eng)
-        uses: actions/upload-artifact@v3
-        with:
-          name: RomanDugaev_CV
-          path: cv_eng/resume.pdf
-
-      - name: Upload artifacts (rus)
-        uses: actions/upload-artifact@v3
-        with:
-          name: RomanDugaev_CV
-          path: cv_rus/resume.pdf
-
-      - name: Upload CV (eng)
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: cv_eng/resume.pdf
-          asset_name: RomanDugaev_CV(eng).pdf
-          asset_content_type: application/pdf
-
-      - name: Upload CV (rus)
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: cv_rus/resume.pdf
-          asset_name: RomanDugaev_CV(rus).pdf
-          asset_content_type: application/pdf
-          
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          gh release upload "$RELEASE_TAG" \
+            build/RomanDugaev_CV_eng.pdf \
+            build/RomanDugaev_CV_rus.pdf --clobber

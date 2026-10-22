@@ -1,7 +1,9 @@
+/build/
 *.log
 *.pdf
 *.aux
-*fdb_latexmk
-*synctex.gz
-*xdv
-*fls
+*.out
+*.fdb_latexmk
+*.synctex.gz
+*.xdv
+*.fls

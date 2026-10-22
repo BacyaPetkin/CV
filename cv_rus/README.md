@@ -1,1 +1,0 @@
-cv is based on [template](https://www.overleaf.com/latex/templates/russelresume/zqnypvvjsfvq)

@@ -1,100 +1,67 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-set -e
-
-SCRIPT_DIR=$(realpath "$(dirname "$0")")
-DESCRIPTION="Build CV"
-
-LATEX=xelatex
-
-CV_LATEX_FILENAME=resume.tex
-CV_PATH_ENG=$SCRIPT_DIR/cv_eng
-CV_PATH_RUS=$SCRIPT_DIR/cv_rus
-
-BUILD_DIR=$SCRIPT_DIR/build
-
-BUILD_MODE= # eng or rus
-
-load-colors() {
-    RED='\033[0;31m'
-    GREEN='\033[0;32m'
-    YELLOW='\033[0;33m'
-    BLUE='\033[0;34m'
-    NC='\033[0m'
+usage() {
+    printf 'Usage: %s [--language eng|rus|all]\n' "$0"
+    printf 'Build both CV PDFs by default. Requires XeLaTeX.\n'
 }
 
-print-error() { load-colors && echo -e "${RED}Error: $@$NC" >&2; }
-print-info() { load-colors && echo -e "${GREEN}Info: $@$NC" >&2; }
-print-warning() { load-colors && echo -e "${YELLOW}Warning: $@$NC" >&2; }
-print-debug() { load-colors && echo -e "${BLUE}Debug: $@$NC" >&2; }
+language=all
+while (($#)); do
+    case "$1" in
+        --language)
+            if (($# < 2)); then
+                printf 'Error: --language requires eng, rus, or all.\n' >&2
+                exit 2
+            fi
+            language=$2
+            shift 2
+            ;;
+        --help|-h)
+            usage
+            exit 0
+            ;;
+        *)
+            printf 'Error: unknown argument: %s\n' "$1" >&2
+            usage >&2
+            exit 2
+            ;;
+    esac
+done
 
-execute() {
-    print-debug Running: "$@"
-    eval "$@"
-    result=$?
+case "$language" in
+    eng|rus) languages=("$language") ;;
+    all) languages=(eng rus) ;;
+    *)
+        printf 'Error: invalid language: %s (choose eng, rus, or all).\n' "$language" >&2
+        exit 2
+        ;;
+esac
 
-    if [ $result -ne 0 ]; then
-        print-error Exited with error: $result
-        return $result
-    fi
-}
+if ! command -v xelatex >/dev/null 2>&1; then
+    printf 'Error: xelatex is not installed. See README.md for dependencies.\n' >&2
+    exit 1
+fi
 
-build-latex-file() {
-    if [ "$#" -ne 1 ]; then
-        print-error Incorrect number of arguments for build-latex-file function
-        exit 5
-    fi
-    source_path=$(realpath $1)
-    subbuild_dir=$(execute basename $(dirname $source_path))
-    output_path=$BUILD_DIR/$subbuild_dir
+project_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+cd -- "$project_dir"
 
-    echo source_path $source_path
-    echo output_path $output_path
-    echo subbuild_dir $subbuild_dir
+for language in "${languages[@]}"; do
+    source_file="cv-$language.tex"
+    output_dir="build/$language"
+    pdf="build/RomanDugaev_CV_$language.pdf"
 
-    execute mkdir --parent $output_path
-    execute xelatex -interaction=nonstopmode -output-directory=$output_path $source_path
-}
-
-build-cv() {
-    if [ "$BUILD_MODE" == "eng" ]; then
-        print-info Building CV in english
-        (execute cd $CV_PATH_ENG && build-latex-file $CV_LATEX_FILENAME)
-    elif [ "$BUILD_MODE" == "rus" ]; then
-        print-info Building CV in russian
-        (execute cd $CV_PATH_RUS && build-latex-file $CV_LATEX_FILENAME)
-    else
-        print-error Invalid CV mode: '$BUILD_MODE'
-        exit 4
-    fi
-}
-
-print-usage() {
-    echo "Usage: $0 --language [eng|rus]"
-    echo "Description: $DESCRIPTION"
-}
-
-parse-cli-options() {
-    if [ "$#" -ne 2 ]; then
-        print-error Incorrect number of arguments.
-        print-usage
+    if [[ ! -f "$source_file" ]]; then
+        printf 'Error: missing source file: %s\n' "$source_file" >&2
         exit 1
     fi
 
-    if [ "$1" != "--language" ]; then
-        print-error Unknown option $1
-        print-usage
-        exit 2
-    fi
-
-    if [ "$2" != "eng" ] && [ "$2" != "rus" ]; then
-        print-error Invalid value for --git-access-mode. Choose either 'eng' or 'rus'.
-        print-usage
-        exit 3
-    fi
-
-    BUILD_MODE=$2
-}
-
-parse-cli-options $@
-build-cv
+    mkdir -p -- "$output_dir"
+    for pass in 1 2; do
+        printf 'Building %s (pass %s/2)\n' "$language" "$pass"
+        xelatex -no-shell-escape -interaction=nonstopmode -halt-on-error \
+            -file-line-error -output-directory="$output_dir" "$source_file" </dev/null
+    done
+    cp -- "$output_dir/cv-$language.pdf" "$pdf"
+    printf 'Built %s\n' "$project_dir/$pdf"
+done

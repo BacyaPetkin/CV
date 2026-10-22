@@ -1,0 +1,104 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage{cv}
+\setdefaultlanguage{english}
+\hypersetup{pdflang={en}}
+
+\begin{document}
+\cvheader{Roman Dugaev}{Software Engineer · C++ / Python · Networking \& Backend}
+
+\section*{Profile}
+Software engineer working with C++ and Python on data-transfer protocols,
+asynchronous services and data-processing systems. Experienced in rewriting
+legacy libraries and building new services, from native networking code to
+Python APIs and delivery tooling. Background in telecommunications, SDR and FPGA
+hardware.
+
+\section*{Experience}
+\cventry{DEXOR — IT Systems Engineer}{February 2021 — present}{Köthen, Germany · Remote collaboration}
+Develop and maintain networking libraries and Python backend services.
+Work across implementation, integration, testing, packaging and CI/CD.
+
+\cventry{Data-transfer protocols \& transport libraries}{}{C++, Python, Asio, TCP/UDP, nanobind, CMake, Conan}
+\begin{itemize}
+  \item Rewrote legacy RSDT and DMTP libraries and their shared protocol,
+    interface and transport layers; maintained point-to-point and
+    point-to-multipoint data-transfer code.
+  \item Developed PBTP and RSDT-X: asynchronous C++ transports using parallel
+    TCP streams and reliable UDP delivery, with coroutine-based networking,
+    bounded buffers and worker scheduling.
+  \item Built Python bindings and transport-py, a shared asyncio API
+    with validated configuration; automated native-wheel packaging and tests.
+\end{itemize}
+
+\cventry{DataClone — file-transfer platform}{}{Collaborative development · Python, FastAPI, PostgreSQL, Redis, WebSockets}
+\begin{itemize}
+  \item Co-developed the backend, host agents, transfer runtime, messaging
+    library, shared contracts and Python client packaging across six projects:
+    backend-py, agent-py, transfer-py, tunnel-py, contracts-py and client-py.
+  \item Contributed to filesystem scanning and watching, revisioned metadata,
+    transfer-process orchestration, file batching and progress reporting.
+  \item Integrated native PBTP/RSDT-X transports with asyncio services,
+    WebSocket control channels, ZeroMQ IPC and typed Pydantic contracts.
+\end{itemize}
+
+\cventry{Aerodata DataCore — data-processing platform}{}{Python, FastAPI, SQLModel/SQLAlchemy, PostgreSQL, Temporal, Docker}
+\begin{itemize}
+  \item Developed transformation, import, database and backend components for
+    aviation and maritime data, including schema validation, HSQLDB-to-SQLite
+    transformation, ZeroMQ streaming and PostgreSQL import integration.
+  \item Built APIs for flights, vessels, files and processing tasks, with
+    JWT/Keycloak authentication, role-based access and S3-compatible storage.
+  \item Orchestrated containerized validation, transformation and import
+    through Temporal, with retries, cancellation and task-status tracking.
+\end{itemize}
+
+\newpage
+\section*{Technical skills}
+\cvskill{Core languages}{C++17–23, C++26 in recent transport libraries; Python 3.11+,
+  asyncio, typing and Pydantic.}
+\cvskill{Networking}{TCP/UDP, Asio/Boost.Asio, coroutines, multithreading,
+  POSIX/Linux, WebSockets, ZeroMQ, Protobuf and gRPC.}
+\cvskill{Backend \& data}{FastAPI, SQLAlchemy/SQLModel, PostgreSQL, SQLite,
+  Redis, Temporal, S3-compatible storage; earlier work with InfluxDB.}
+\cvskill{Build \& delivery}{CMake, Conan, nanobind, Python packaging,
+  PyInstaller, Docker/Compose, Git, GitLab CI and GitHub Actions.}
+\cvskill{Testing \& tools}{GoogleTest, pytest, Linux, Bash, Jupyter,
+  Plotly and technical documentation.}
+\cvskill{User interfaces}{Practical experience with React and TypeScript
+  for straightforward web UIs; PySide and QML for desktop tools.}
+\cvskill{Rust — beginner}{Learning through personal experiments with
+  Tokio, UDP networking, packet serialization and asynchronous tests.}
+\cvskill{AI-assisted development}{AI coding agents and chats as part of
+  the development workflow.}
+
+\section*{Earlier engineering work}
+\cventry{Manufacturing tools \& web applications}{DEXOR}{Python, PySide/QML, React/TypeScript}
+\begin{itemize}
+  \item Developed a GUI and command-line manufacturing tester for aircraft
+    multimedia equipment using Python and QML.
+  \item Worked on farm-management and solar-monitoring applications,
+    including straightforward React web interfaces and Python services.
+\end{itemize}
+
+\cventry{FPGA-based SDR board}{July 2020 — April 2022}{SibSUTI / Hochschule Anhalt · Altium Designer, SystemVerilog, Quartus, Questa}
+\begin{itemize}
+  \item Designed a six-layer SDR board with FPGA, RF modulation/demodulation,
+    filters, Ethernet, USB and GPIO; manufactured and tested a prototype.
+  \item Designed RF filters and the digital subsystem; validated basic
+    hardware functionality on the prototype.
+\end{itemize}
+
+\cventry{Wireless protocol on SDR}{May 2019 — July 2020}{SibSUTI · C/C++, Verilog, HackRF, Intel Cyclone 10, BeagleBone PRU}
+Developed a wireless protocol, modified HackRF firmware and implemented
+carrier, bit and frame synchronization using FPGA and PRU processing.
+
+\section*{Education}
+\cventry{Siberian State University of Telecommunications and Informatics}{2013 — 2020}{SibSUTI · Novosibirsk, Russia}
+Bachelor's and Master's degrees in telecommunications, networks and switching
+systems. Additional research during doctoral studies.
+
+\section*{Languages \& interests}
+\cvskill{Languages}{Russian — native; English — B1.}
+\cvskill{Interests}{Linux, electronics and SDR, Home Assistant and home automation.}
+
+\end{document}
